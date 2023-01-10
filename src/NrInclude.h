@@ -19,7 +19,6 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <thread>
-#include <mutex>
 
 #define MAX_MESSAGES     1000
 #define BUFSIZE          1024

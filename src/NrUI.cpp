@@ -24,8 +24,6 @@ NrUI::NrUI(NrString username, NrString password) :
   exit_app           {false},
   connected          {false},
   messages_count     {0},
-  cur_x              {0},
-  cur_y              {0},
   display_page       {0}
 {
   all_messages = new NrString[MAX_MESSAGES];
@@ -341,10 +339,8 @@ void NrUI::AddMessageToMessages(NrString msg)
   UpdateDisplay();
   MoveTo(7, 2);
   printf("Received: %6ld Bytes.", msg.GetLength());
-  MoveTo(cur_y, cur_x);
+  MoveUp(1);
   printf("\n");
-  MoveTo(cur_y, cur_x);
-  //MoveUp(1);
 }
 
 void NrUI::DrawUI()
