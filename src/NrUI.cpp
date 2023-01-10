@@ -24,6 +24,8 @@ NrUI::NrUI(NrString username, NrString password) :
   exit_app           {false},
   connected          {false},
   messages_count     {0},
+  cur_x              {0},
+  cur_y              {0},
   display_page       {0}
 {
   all_messages = new NrString[MAX_MESSAGES];
@@ -120,8 +122,10 @@ void NrUI::Run()
     if (run_once)
     {
       NrString connect_string = NrString(".n ") + username;
+      NrString connect_message = "% Connected using NcRev...";
       if (password.GetLength() > 0) { connect_string = connect_string + '=' + password; }
       SSL_write(net->GetSSL(), connect_string.ToString(), connect_string.GetLength() + 1);
+      SSL_write(net->GetSSL(), connect_message.ToString(), connect_message.GetLength() + 1);
 
       run_once = false;
       std::thread receive_thread([&]() { net->ReceiveData(this); });
@@ -337,8 +341,10 @@ void NrUI::AddMessageToMessages(NrString msg)
   UpdateDisplay();
   MoveTo(7, 2);
   printf("Received: %6ld Bytes.", msg.GetLength());
-  MoveUp(1);
+  MoveTo(cur_y, cur_x);
   printf("\n");
+  MoveTo(cur_y, cur_x);
+  //MoveUp(1);
 }
 
 void NrUI::DrawUI()
