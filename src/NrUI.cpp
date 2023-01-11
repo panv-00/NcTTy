@@ -338,7 +338,16 @@ void NrUI::AddMessageToMessages(NrString msg)
 
   UpdateDisplay();
   MoveTo(7, 2);
-  printf("Received: %6ld Bytes.", msg.GetLength());
+  if (msg.GetLength() == 1)
+  {
+    printf("Received: %6ld Byte.", msg.GetLength());
+  }
+
+  else
+  {
+    printf("Received: %6ld Bytes.", msg.GetLength());
+  }
+
   MoveUp(1);
   printf("\n");
 }
