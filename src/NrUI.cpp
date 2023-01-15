@@ -189,7 +189,6 @@ void NrUI::UpdateDisplay()
   int str_index;
   int written_letters = 0;
   bool running = true;
-  int start_message_at;
 
   for (int j = prompt_height + 6;
            j < prompt_height + display_height;
@@ -224,7 +223,12 @@ void NrUI::UpdateDisplay()
   {
     if (!running) { break; }
     NrString message = all_messages[i];
-    start_message_at = 0;
+
+    if (message.GetCharAt(0) == '<')
+    {
+      SetColor(CLR_MAGENTA_BG);
+      SetColor(CLR_BLACK_FG);
+    }
 
     if (message.GetCharAt(0) == '>' && message.GetCharAt(1) == '>')
     {
@@ -240,16 +244,13 @@ void NrUI::UpdateDisplay()
         && message.GetCharAt(9) == 'e')
 
       {
-        start_message_at = message.HaveChar('[');
-        if (start_message_at == -1) { start_message_at = 0; }
+        NrString message_to = message.SubString(message.HaveChar('['), message.HaveChar(':') - 1);
+        message = message.SubString(message.HaveChar('<'), message.GetLength() - 1);
+        NrString message_from = message.SubString(0, message.HaveChar(':') - 11);
+        message = message.SubString(message.HaveChar(':') + 1, message.GetLength() - 1);
+        message = message_from + "->" + message_to + ":" + message;
         SetColor(CLR_MAGENTA_FG);
       }
-    }
-
-    if (message.GetCharAt(0) == '<')
-    {
-      SetColor(CLR_MAGENTA_BG);
-      SetColor(CLR_BLACK_FG);
     }
 
     if (message.GetCharAt(0) == '(')
@@ -293,7 +294,7 @@ void NrUI::UpdateDisplay()
     row++;
     written_letters = 0;
     MoveTo(row, 1);
-    str_index = start_message_at;
+    str_index = 0;
 
     while (true)
     {

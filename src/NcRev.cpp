@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 {
   if (argc != 2)
   {
-    printf("NcRev v1.0.0\n");
+    printf("NcRev v%s\n", VERSION);
     printf("Usage:\n\n   $ ./ncrev [username]\nor $ ./ncrev [username=password]\n");
 
     return 1;

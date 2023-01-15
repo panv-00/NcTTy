@@ -20,6 +20,8 @@
 #include <openssl/err.h>
 #include <thread>
 
+#define VERSION          "1.0.1"
+
 #define MAX_MESSAGES     1000
 #define BUFSIZE          1024
 #define TIMEOUT          5
