@@ -191,7 +191,7 @@ void NrUI::UpdateDisplay()
   bool running = true;
 
   for (int j = prompt_height + 6;
-           j < prompt_height + display_height;
+           j < prompt_height + display_height + 1;
            j++)
   {
     MoveTo(j, 1);
