@@ -11,7 +11,7 @@
  * Non-Class Functions
  */
 
-void ClrScr         (            ) { system("clear"            ); };
+void ClrScr         (            ) { printf("\033c"            ); };
 void SavePosition   (            ) { printf("\x1b%d",         7); };
 void RestorePosition(            ) { printf("\x1b%d",         8); };
 void SetColor       (ColorCode cc) { printf("\x1b[%dm",      cc); };

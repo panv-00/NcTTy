@@ -100,7 +100,7 @@ void NrUI::Run()
 
     if (exit_app)
     {
-      system("clear");
+      ClrScr();
       MoveTo(1, 1);
       
       if (connected)
