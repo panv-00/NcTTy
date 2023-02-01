@@ -23,8 +23,8 @@
 
 #define VERSION "0.0.2"
 
-//#define ADDRESS          "76.235.94.33"
-#define ADDRESS          "127.0.0.1"
+#define ADDRESS          "76.235.94.33"
+//#define ADDRESS          "127.0.0.1"
 #define PORT             6667
  
 #define PROMPT_HEIGHT 4
