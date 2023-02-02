@@ -1,5 +1,5 @@
 # NcRev
-Yet, another nakenchat client: Nakenchat in Reverse.
+Yet, another nakenchat client.
 
 This is another nakenchat terminal client, with minimal libraries requirements, written in C++.
 
