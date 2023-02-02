@@ -146,6 +146,7 @@ void NrIO::ParseString()
 void NrIO::Echo()
 {
   ClearPrompt();
+  scr.ShowCursor();
   lines.clear();
   ParseString();
 

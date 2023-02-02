@@ -20,6 +20,7 @@ NrScreen::~NrScreen()
 void NrScreen::ClrScr()
 {
   printf("\033c");
+  HideCursor();
 }
 
 void NrScreen::SavePosition()
@@ -72,3 +73,12 @@ void NrScreen::ScrollDn()
   //printf("\033[T");
 }
 
+void NrScreen::HideCursor()
+{
+  printf("\033[?25l");
+}
+
+void NrScreen::ShowCursor()
+{
+  printf("\033[?25h");
+}

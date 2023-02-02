@@ -27,7 +27,8 @@ public:
   void MoveTo         (int r, int c);
   void ScrollUp       (            );
   void ScrollDn       (            );
-
+  void HideCursor     (            );
+  void ShowCursor     (            );
 protected:
 
 private:

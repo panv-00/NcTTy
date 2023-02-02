@@ -49,7 +49,6 @@ NrUI::NrUI(std::string username, std::string password) :
   io = new NrIO(cols);
   net = new NrNet();
 
-
   NetworkStatus connect_status = net->Connect();
 
   switch(connect_status)
@@ -171,23 +170,6 @@ void NrUI::AddBufferToMessages(const char* buffer, int bytes_received)
     
     else { message_string += buffer[i]; }
   }
-
-
-/*
-  message_buffer.append(buffer, bytes_received);
-
-  size_t pos = message_buffer.find("\r");
-
-  while (pos != std::string::npos)
-  {
-    std::string message = message_buffer.substr(0, pos + 1);
-
-    message.erase(0, message.find_first_not_of("\n"));
-    AddMessageToMessages(StringToMessage(message));
-    message_buffer.erase(0, pos + 1);
-    pos = message_buffer.find("\r");
-  }
-*/
 }
 
 void NrUI::SetFlagPageUp()
