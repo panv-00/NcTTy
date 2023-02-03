@@ -122,6 +122,7 @@ void NrUI::Run()
     {
       scr.ClrScr();
       scr.MoveTo(1, 1);
+      scr.ShowCursor();
 
       if (connected)
       {
