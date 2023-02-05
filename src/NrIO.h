@@ -20,6 +20,7 @@ public:
   void ReadInput();
   void SetWidth(uint16_t w) { width = w; };
   void ClearPrompt();
+  void Echo();
 
   std::string GetIoLine() { return io_line; };
 
@@ -27,8 +28,7 @@ protected:
 
 private:
   void ParseString();
-  void Echo();
-  int Getch();
+  int  Getch();
   bool IsAllowed(int c);
 
   std::string io_line;

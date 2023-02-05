@@ -214,6 +214,11 @@ void NrUI::UpdateTerminal()
       fflush(stdout);
       io->ClearPrompt();
       UpdateDisplay();
+      if (io->GetIoLine().length() > 0)
+      {
+        io->Echo();
+        printf("\n");
+      }
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
