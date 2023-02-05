@@ -106,7 +106,7 @@ void NrUI::Run()
     connect_string = ".n " + username;
   }
 
-  std::string connect_message = "\% Connected using Ncrev...";
+  std::string connect_message = "\% Connected using ncrev...";
 
   bool run_once = true;
   
