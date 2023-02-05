@@ -209,9 +209,11 @@ void NrUI::UpdateTerminal()
       rows = w.ws_row;
       cols = w.ws_col;
       display_height = rows - PROMPT_HEIGHT - 1;
+      io->SetWidth(cols);
       
       fflush(stdout);
-      DrawUI();
+      io->ClearPrompt();
+      UpdateDisplay();
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));

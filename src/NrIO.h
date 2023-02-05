@@ -19,13 +19,13 @@ public:
 
   void ReadInput();
   void SetWidth(uint16_t w) { width = w; };
+  void ClearPrompt();
 
   std::string GetIoLine() { return io_line; };
 
 protected:
 
 private:
-  void ClearPrompt();
   void ParseString();
   void Echo();
   int Getch();
