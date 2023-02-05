@@ -194,6 +194,13 @@ void NrUI::UpdateDisplay()
   {
     PrintMessage(all_messages[i]);
   }
+      if (io->GetIoLine().length() > 0)
+      {
+        io->Echo();
+        scr.MoveTo(3, 1);
+        printf("\n");
+      }
+
 }
 
 void NrUI::UpdateTerminal()
@@ -214,11 +221,6 @@ void NrUI::UpdateTerminal()
       fflush(stdout);
       io->ClearPrompt();
       UpdateDisplay();
-      if (io->GetIoLine().length() > 0)
-      {
-        io->Echo();
-        printf("\n");
-      }
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -284,6 +286,7 @@ void NrUI::AddMessageToMessages(NrMessage msg)
   
   all_messages.push_back(msg);
   UpdateDisplay();
+
 }
 
 NrMessage NrUI::StringToMessage(std::string message_string)
