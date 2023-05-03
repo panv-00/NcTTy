@@ -9,7 +9,7 @@
 #include "NrNet.h"
 #include "NrIO.h"
 
-std::string wrap_string(const std::string& str, uint16_t width)
+std::string wrap_string(const std::string &str, uint16_t width)
 {
   std::string wrapped_string;
   uint16_t line_start = 0;
