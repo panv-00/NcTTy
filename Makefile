@@ -3,5 +3,5 @@ default:
 
 clean:
 	@rm -f build/*.o
-	@rm -f ncrev
+	@rm -f nctty
 	@echo "Clean!"

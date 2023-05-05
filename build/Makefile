@@ -5,16 +5,13 @@ LIBS=
 VPATH=../src
 
 OBJECTS= \
-	NrUI.o \
-	NrIO.o \
-	NrNet.o \
-	NrScreen.o \
+	NcTTyUi.o \
+	NcTTyNet.o \
 
 DEPLIST= \
-	NrInclude.h \
 
 default: $(OBJECTS)
-	$(CPP) -o ../ncrev ../src/NcRev.cpp \
+	$(CPP) -o ../nctty ../src/NcTTy.cpp \
 		$(OBJECTS) \
 		$(CFLAGS) \
 		$(LIBS)
