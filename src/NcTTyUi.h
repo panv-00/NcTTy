@@ -17,7 +17,7 @@
 #include <unistd.h>
 #include <vector>
 
-#define MSG_MAX_LENGTH 1024
+#define MSG_MAX_LENGTH 512
 #define BUFSIZE 2048
 
 #define CTRL_KEY(k) ((k)&0x1f)
