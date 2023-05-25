@@ -11,7 +11,7 @@ OBJECTS= \
 DEPLIST= \
 
 default: $(OBJECTS)
-	$(CPP) -o ../nctty ../src/NcTTy.cpp \
+	$(CPP) -o ../nctty $(VPATH)/nctty.cpp \
 		$(OBJECTS) \
 		$(CFLAGS) \
 		$(LIBS)
