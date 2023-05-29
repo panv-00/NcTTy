@@ -316,6 +316,7 @@ void NcTTyUi::AddBufferToMessages(const char *buffer, int bytes_received)
 
     if (buffer[i] == '\n')
     {
+      message_string = message_string.substr(0, message_string.find('\r'));
       message_string += '\0';
       _AddMessageToMessages(_StringToMessage(message_string));
       message_buffer.erase(0, i + 1);
@@ -703,6 +704,8 @@ int NcTTyUi::_PrintMessage(Message msg, bool emulate)
   }
   break;
   }
+
+  formatted = formatted.substr(0, formatted.find('\0'));
 
   int return_value = 0;
 
