@@ -4,9 +4,7 @@
  */
 
 #include "NcTTyUi.h"
-#include <locale.h>
 #include <stddef.h>
-#include <wchar.h>
 
 int main(int argc, char *argv[])
 {
