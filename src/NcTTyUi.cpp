@@ -202,7 +202,7 @@ void NcTTyUi::ReadInput()
     // insert mode
     if (insert_mode)
     {
-      if (c == CTRL_KEY('c'))
+      if (c == CTRL_KEY('i'))
       {
         _SetInsertMode(false);
       }
