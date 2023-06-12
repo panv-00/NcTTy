@@ -1,28 +1,56 @@
-/*
- * File:   NcTTyUi.h
- * Created on 2023-04-17
- */
-
 #ifndef NCTTYUI_H
 #define NCTTYUI_H
 
 #include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <string>
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <thread>
 #include <unistd.h>
-#include <vector>
 
-#define MSG_MAX_LENGTH 512
-#define BUFSIZE 2048
+#include "NcMessage.h"
 
 #define CTRL_KEY(k) ((k)&0x1f)
 
+#define MAX_PROMPT 512
+#define SMALL_STRING 17
+#define LARGE_STRING 4096
+#define MAX_MESSAGES 1024
+
+#define MIN_TERM_WIDTH 55
+#define MIN_TERM_HEIGHT 14
+
+#define NEW_LINE "\r\n"
+#define CLEAR_TO_END "\x1b[K"
+#define HIDE_CURSOR "\x1b[?25l"
+#define SHOW_CURSOR "\x1b[?25h"
+#define CURSOR_INSERT "\x1b[5 q"
+#define CURSOR_MOVE "\x1b[1 q"
+#define HOME_POSITION "\x1b[H"
+
+#define CLR_DEFAULT "\x1b[0m"
+#define CLR_BLACK_FG "\x1b[30m"
+#define CLR_RED_FG "\x1b[31m"
+#define CLR_GREEN_FG "\x1b[32m"
+#define CLR_YELLOW_FG "\x1b[33m"
+#define CLR_BLUE_FG "\x1b[34m"
+#define CLR_MAGENTA_FG "\x1b[35m"
+#define CLR_CYAN_FG "\x1b[36m"
+#define CLR_WHITE_FG "\x1b[37m"
+#define CLR_BLACK_BG "\x1b[40m"
+#define CLR_RED_BG "\x1b[41m"
+#define CLR_GREEN_BG "\x1b[42m"
+#define CLR_YELLOW_BG "\x1b[43m"
+#define CLR_BLUE_BG "\x1b[44m"
+#define CLR_MAGENTA_BG "\x1b[45m"
+#define CLR_CYAN_BG "\x1b[46m"
+#define CLR_WHITE_BG "\x1b[47m"
+
 #define TAB 9
+#define ENTER 13
 #define ESCAPE_CHAR 27
 #define PAGE_UP 53
 #define PAGE_DN 54
@@ -34,59 +62,20 @@
 #define PAGE_UP_DN 126
 #define BACKSPACE 127
 
-typedef enum
-{
-  CLR_DEFAULT = 0,
-  CLR_BLACK_FG = 30,
-  CLR_RED_FG,
-  CLR_GREEN_FG,
-  CLR_YELLOW_FG,
-  CLR_BLUE_FG,
-  CLR_MAGENTA_FG,
-  CLR_CYAN_FG,
-  CLR_WHITE_FG,
-
-  CLR_BLACK_BG = 40,
-  CLR_RED_BG,
-  CLR_GREEN_BG,
-  CLR_YELLOW_BG,
-  CLR_BLUE_BG,
-  CLR_MAGENTA_BG,
-  CLR_CYAN_BG,
-  CLR_WHITE_BG
-
-} ColorCode;
-
-typedef enum
-{
-  CURSOR_TO_END = 0,
-  CURSOR_TO_START,
-  START_TO_END
-
-} ClearCode;
-
-typedef enum
-{
-  MSG_NONE = 0,
-  MSG_SENT,
-  MSG_RECEIVED,
-  MSG_PRIVATE_SENT,
-  MSG_PRIVATE_RECEIVED,
-  MSG_EMOTE,
-  MSG_SYSTEM
-
-} MessageType;
-
-class NcTTyNet;
-
 typedef struct
 {
-  MessageType type;
-  std::string from;
-  std::string to;
-  std::string body;
+  unsigned int cur_x;
+  unsigned int cur_y;
+  unsigned int screen_rows;
+  unsigned int screen_cols;
+  char *screen_buffer;
+  size_t buffer_size;
+  size_t buffer_length;
+  struct termios orig_term;
 
-} Message;
+} Terminal;
+
+class NcTTyNet;
 
 class NcTTyUi
 {
@@ -94,68 +83,69 @@ public:
   NcTTyUi();
   ~NcTTyUi();
 
-  void ClearScreen();
-  void EraseInDisplay(ClearCode code);
-  void EraseInLine(ClearCode code);
-  void MoveTo(int row, int col);
-  void MoveUp(int n);
-  void MoveDn(int n);
-  void MoveRt(int n);
-  void MoveLt(int n);
-  void SaveLocation();
-  void RestoreLocation();
-  void SetColor(ColorCode code);
-
-  void SetupApp();
   void Run();
-  void ReadInput();
-
   void AddBufferToMessages(const char *buffer, int bytes_received);
+
   void EndConnection() { connected = false; };
 
 private:
   void _DisableRawMode();
   void _EnableRawMode();
-  void _SetInsertMode(bool mode);
-  void _MoveCursorRight();
-  void _MoveCursorLeft();
+  bool _GetScreenSize(unsigned int *rows, unsigned int *cols);
+  void _SetupScreenBuffer(bool resize_signal);
+  bool _HasPureChars(const char *s);
+  unsigned int _PrAppendSB(const char *s, unsigned int length);
+  unsigned int _AppendSB(const char *s, unsigned int length);
+  void _PromptToSB();
+  void _QuitApp();
+  void _ForceQuit();
+  void _RunPrompt();
+  void _DeleteChar();
   void _ScrollUp();
   void _ScrollDown();
-  void _DeleteChar();
+  void _MoveCursorRight();
+  void _MoveCursorLeft();
   void _InsertChar(char c);
-  void _PrintPrompt(int row, int col);
+  char _Getch();
+  void _GetCharacter();
+  void _DisplayTermWidthWarning();
+  void _DisplayWelcome();
+  void _DisplayMessages();
+  void _DisplayConnecting();
+  void _DisplayDisconnecting();
   void _PrintPrompt();
-  void _ClearDisplay();
+  void _RefreshScreen();
+  void _AddMessageToMessages(NcMessage *msg);
+  size_t _Trim(char *str);
+  void _Fatal(const char *s);
+  void _CleanUp();
 
-  void _Trim(char *str);
+  Terminal term;
 
-  void _AddMessageToMessages(Message msg);
-  Message _StringToMessage(std::string message_string);
-  int _PrintMessage(Message msg, bool emulate);
-  void _UpdateDisplay();
-
-  struct winsize w;
-  struct termios oldt, newt;
-  int cursor_index;
-  int cursor_col;
-  int message_length;
-  char message[MSG_MAX_LENGTH];
-
-  bool app_run;
-  bool insert_mode;
-
-  std::string username;
-  std::string password;
-
+  bool app_has_error;
+  bool in_raw_mode;
+  bool in_insert_mode;
+  bool accept_input;
+  bool app_is_running;
+  bool get_username;
+  bool get_password;
   bool connected;
-  NcTTyNet *net;
+  bool disconnecting;
+  bool scrolling;
 
-  std::vector<Message> all_messages;
-  size_t start_index;
-  int scroll_amount;
-  bool first_message_visible;
-  std::string message_buffer;
-  std::string exit_message;
+  char username[SMALL_STRING + 1];
+  char password[SMALL_STRING + 1];
+  char *prompt;
+  size_t prompt_cursor_index;
+  size_t prompt_length;
+
+  char message_buffer[LARGE_STRING + 1];
+  size_t message_buffer_length;
+  NcMessage all_messages[MAX_MESSAGES];
+  size_t number_of_messages;
+  size_t first_message_index;
+
+  NcTTyNet *net;
 };
 
 #endif

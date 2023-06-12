@@ -7,6 +7,7 @@ VPATH=../src
 OBJECTS= \
 	NcTTyUi.o \
 	NcTTyNet.o \
+	NcMessage.o
 
 DEPLIST= \
 

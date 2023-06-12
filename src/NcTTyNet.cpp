@@ -73,10 +73,12 @@ void NcTTyNet::End()
   if (connected)
   {
     int result = SSL_shutdown(ssl);
+
     if (result == 0)
     {
       result = SSL_shutdown(ssl);
     }
+
     SSL_free(ssl);
   }
 
