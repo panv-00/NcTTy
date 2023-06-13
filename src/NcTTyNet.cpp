@@ -1,8 +1,3 @@
-/*
- * File:   NcTTyNet.cpp
- * Created on 2023-01-31
- */
-
 #include "NcTTyNet.h"
 
 const char *NetStatusToText(NetworkStatus code)

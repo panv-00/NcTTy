@@ -1,8 +1,3 @@
-/*
- * File:   NcTTyNet.h
- * Created on 2023-01-31
- */
-
 #ifndef NCTTYNET_H
 #define NCTTYNET_H
 

@@ -407,6 +407,12 @@ void NcTTyUi::_RunPrompt()
   if (get_username)
   {
     size_t bytes_to_copy = prompt_length;
+    const char *equal_sign_pos = strchr(prompt, '=');
+
+    if (equal_sign_pos != NULL)
+    {
+      bytes_to_copy = equal_sign_pos - prompt;
+    }
 
     if (bytes_to_copy > SMALL_STRING)
     {
@@ -446,20 +452,41 @@ void NcTTyUi::_RunPrompt()
 
     if (strncmp(prompt, ".n", 2) == 0)
     {
-      const char *modified_prompt = prompt + 2;
-      char trimmed_prompt[SMALL_STRING + 1];
+      // char trimmed_prompt[SMALL_STRING + 1];
+      //
+      // memcpy(trimmed_prompt, modified_prompt, SMALL_STRING);
+      // trimmed_prompt[SMALL_STRING] = '\0';
+      //
+      // _Trim(trimmed_prompt);
+      //
+      // size_t value_length = strlen(trimmed_prompt);
+      // size_t copy_length =
+      //     (value_length < SMALL_STRING) ? value_length : SMALL_STRING;
+      //
+      // memcpy(username, trimmed_prompt, copy_length);
+      // username[copy_length] = '\0';
+      //
 
-      memcpy(trimmed_prompt, modified_prompt, SMALL_STRING);
-      trimmed_prompt[SMALL_STRING] = '\0';
+      char *modified_prompt = prompt + 2;
+      size_t modified_prompt_length = prompt_length - 2;
 
-      _Trim(trimmed_prompt);
+      modified_prompt_length -= _Trim(modified_prompt);
 
-      size_t value_length = strlen(trimmed_prompt);
-      size_t copy_length =
-          (value_length < SMALL_STRING) ? value_length : SMALL_STRING;
+      size_t bytes_to_copy = modified_prompt_length;
+      const char *equal_sign_pos = strchr(modified_prompt, '=');
 
-      memcpy(username, trimmed_prompt, copy_length);
-      username[copy_length] = '\0';
+      if (equal_sign_pos != NULL)
+      {
+        bytes_to_copy = equal_sign_pos - modified_prompt;
+      }
+
+      if (bytes_to_copy > SMALL_STRING)
+      {
+        bytes_to_copy = SMALL_STRING;
+      }
+
+      strncpy(username, modified_prompt, bytes_to_copy);
+      username[bytes_to_copy] = '\0';
     }
   }
 
@@ -701,8 +728,6 @@ void NcTTyUi::_GetCharacter()
       _QuitApp();
     }
   }
-
-  _RefreshScreen();
 }
 
 void NcTTyUi::_DisplayTermWidthWarning()
@@ -766,6 +791,8 @@ void NcTTyUi::_DisplayMessages()
   char buf[23 + SMALL_STRING + LARGE_STRING];
   size_t buffer_length = 0;
   unsigned int num_of_lines = 0;
+  size_t message_index = first_message_index;
+  bool loop_through_messages = true;
 
   MessageType t;
 
@@ -774,25 +801,26 @@ void NcTTyUi::_DisplayMessages()
     return;
   }
 
-  for (size_t i = first_message_index; i < number_of_messages; i++)
+  while (loop_through_messages)
+  // for (size_t i = first_message_index; i < number_of_messages; i++)
   {
-    t = all_messages[i].GetType();
+    t = all_messages[message_index].GetType();
 
     if (t == MSG_NONE)
     {
       _AppendSB(CLR_DEFAULT, 4);
 
-      if (strlen(all_messages[i].GetBody()) > term.screen_cols)
+      if (strlen(all_messages[message_index].GetBody()) > term.screen_cols)
       {
-        strncpy(buf, all_messages->GetBody(), term.screen_cols);
+        strncpy(buf, all_messages[message_index].GetBody(), term.screen_cols);
         buf[term.screen_cols] = '\0';
         buffer_length = term.screen_cols;
       }
 
       else
       {
-        buffer_length =
-            snprintf(buf, sizeof(buf), "%s", all_messages[i].GetBody());
+        buffer_length = snprintf(buf, sizeof(buf), "%s",
+                                 all_messages[message_index].GetBody());
 
         if (buffer_length >= sizeof(buf))
         {
@@ -805,8 +833,8 @@ void NcTTyUi::_DisplayMessages()
     {
       _AppendSB(CLR_GREEN_BG, 5);
       _AppendSB(CLR_BLACK_FG, 5);
-      buffer_length =
-          snprintf(buf, sizeof(buf), "%s", all_messages[i].GetBody());
+      buffer_length = snprintf(buf, sizeof(buf), "%s",
+                               all_messages[message_index].GetBody());
 
       if (buffer_length >= sizeof(buf))
       {
@@ -817,8 +845,8 @@ void NcTTyUi::_DisplayMessages()
     else if (t == MSG_SYSTEM)
     {
       _AppendSB(CLR_RED_FG, 5);
-      buffer_length =
-          snprintf(buf, sizeof(buf), "%s", all_messages[i].GetBody());
+      buffer_length = snprintf(buf, sizeof(buf), "%s",
+                               all_messages[message_index].GetBody());
 
       if (buffer_length >= sizeof(buf))
       {
@@ -829,9 +857,9 @@ void NcTTyUi::_DisplayMessages()
     else if (t == MSG_SENT)
     {
       _AppendSB(CLR_BLUE_FG, 5);
-      buffer_length =
-          snprintf(buf, sizeof(buf), "%s: %s", all_messages[i].GetFrom(),
-                   all_messages[i].GetBody());
+      buffer_length = snprintf(buf, sizeof(buf), "%s: %s",
+                               all_messages[message_index].GetFrom(),
+                               all_messages[message_index].GetBody());
 
       if (buffer_length >= sizeof(buf))
       {
@@ -842,9 +870,9 @@ void NcTTyUi::_DisplayMessages()
     else if (t == MSG_RECEIVED)
     {
       _AppendSB(CLR_DEFAULT, 4);
-      buffer_length =
-          snprintf(buf, sizeof(buf), "%s: %s", all_messages[i].GetFrom(),
-                   all_messages[i].GetBody());
+      buffer_length = snprintf(buf, sizeof(buf), "%s: %s",
+                               all_messages[message_index].GetFrom(),
+                               all_messages[message_index].GetBody());
 
       if (buffer_length >= sizeof(buf))
       {
@@ -855,9 +883,9 @@ void NcTTyUi::_DisplayMessages()
     else if (t == MSG_PRIVATE_SENT)
     {
       _AppendSB(CLR_MAGENTA_FG, 5);
-      buffer_length =
-          snprintf(buf, sizeof(buf), "-> %s: %s", all_messages[i].GetTo(),
-                   all_messages[i].GetBody());
+      buffer_length = snprintf(buf, sizeof(buf), "-> %s: %s",
+                               all_messages[message_index].GetTo(),
+                               all_messages[message_index].GetBody());
 
       if (buffer_length >= sizeof(buf))
       {
@@ -869,9 +897,9 @@ void NcTTyUi::_DisplayMessages()
     {
       _AppendSB(CLR_MAGENTA_BG, 5);
       _AppendSB(CLR_BLACK_FG, 5);
-      buffer_length =
-          snprintf(buf, sizeof(buf), "<- %s: %s", all_messages[i].GetFrom(),
-                   all_messages[i].GetBody());
+      buffer_length = snprintf(buf, sizeof(buf), "<- %s: %s",
+                               all_messages[message_index].GetFrom(),
+                               all_messages[message_index].GetBody());
 
       if (buffer_length >= sizeof(buf))
       {
@@ -882,15 +910,28 @@ void NcTTyUi::_DisplayMessages()
     num_of_lines += _PrAppendSB(buf, buffer_length);
     _AppendSB(CLR_DEFAULT, 4);
 
-    if (num_of_lines > term.screen_rows - 2)
+    if (num_of_lines > term.screen_rows - 3)
     {
       if (!scrolling)
       {
         first_message_index++;
-        _RefreshScreen();
+        loop_through_messages = false;
       }
+    }
 
-      break;
+    message_index++;
+
+    if (message_index == number_of_messages)
+    {
+      loop_through_messages = false;
+    }
+
+    else
+    {
+      if (!loop_through_messages)
+      {
+        _DisplayMessages();
+      }
     }
   }
 
@@ -903,11 +944,15 @@ void NcTTyUi::_DisplayMessages()
 void NcTTyUi::_DisplayConnecting()
 {
   unsigned int num_of_lines = 0;
+  unsigned int temp = 1;
 
-  _AppendSB(" Connecting user '", 18);
-  _AppendSB(username, strlen(username));
-  _AppendSB("' with password '", 17);
-  num_of_lines += _AppendSB(password, strlen(password));
+  temp *= _AppendSB(" Connecting user '", 18);
+  temp *= _AppendSB(username, strlen(username));
+  temp *= _AppendSB("' with password '", 17);
+  temp *= _AppendSB(password, strlen(password));
+  temp *= _AppendSB("'...", 4);
+
+  num_of_lines += temp;
 
   for (unsigned int i = num_of_lines; i < term.screen_rows - 1; i++)
   {
