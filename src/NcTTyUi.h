@@ -95,6 +95,7 @@ private:
   void _SetupScreenBuffer(bool resize_signal);
   bool _HasPureChars(const char *s);
   unsigned int _PrAppendSB(const char *s, unsigned int length);
+  unsigned int _PrAppendSB(const char *s, unsigned int length, bool simulate);
   unsigned int _AppendSB(const char *s, unsigned int length);
   void _PromptToSB();
   void _QuitApp();
@@ -131,7 +132,6 @@ private:
   bool get_password;
   bool connected;
   bool disconnecting;
-  bool scrolling;
 
   char username[SMALL_STRING + 1];
   char password[SMALL_STRING + 1];
@@ -144,6 +144,7 @@ private:
   NcMessage all_messages[MAX_MESSAGES];
   size_t number_of_messages;
   size_t first_message_index;
+  int scroll_amount;
 
   NcTTyNet *net;
 };
