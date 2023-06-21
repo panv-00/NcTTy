@@ -578,6 +578,18 @@ void NcTTyUi::_MoveCursorLast()
   }
 }
 
+void NcTTyUi::_InsertNext()
+{
+  _MoveCursorRight();
+  in_insert_mode = true;
+}
+
+void NcTTyUi::_InsertLast()
+{
+  _MoveCursorLast();
+  in_insert_mode = true;
+}
+
 void NcTTyUi::_InsertChar(char c)
 {
   if (prompt_length == MAX_PROMPT)
@@ -747,6 +759,16 @@ void NcTTyUi::_GetCharacter()
     else if (c == '$')
     {
       _MoveCursorLast();
+    }
+
+    else if (c == 'a')
+    {
+      _InsertNext();
+    }
+
+    else if (c == 'A')
+    {
+      _InsertLast();
     }
   }
 }

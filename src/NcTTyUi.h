@@ -108,6 +108,8 @@ private:
   void _MoveCursorLeft();
   void _MoveCursorFirst();
   void _MoveCursorLast();
+  void _InsertNext();
+  void _InsertLast();
   void _InsertChar(char c);
   char _Getch();
   void _GetCharacter();
