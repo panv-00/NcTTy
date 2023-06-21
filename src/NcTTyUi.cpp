@@ -363,22 +363,21 @@ unsigned int NcTTyUi::_AppendSB(const char *s, unsigned int length)
 void NcTTyUi::_PromptToSB()
 {
   unsigned int length = term.screen_cols - 8;
+  unsigned int start = 0;
 
   if (length > prompt_length)
   {
     length = prompt_length;
   }
 
+  if (prompt_cursor_index > length)
+  {
+    start = prompt_cursor_index - length;
+  }
+
   if (term.buffer_length + length > term.buffer_size)
   {
     return;
-  }
-
-  unsigned int start = 0;
-
-  if (prompt_length > length)
-  {
-    start = prompt_length - length;
   }
 
   for (size_t i = term.buffer_length; i < term.buffer_length + length; i++)
@@ -536,7 +535,7 @@ void NcTTyUi::_MoveCursorRight()
   {
     prompt_cursor_index++;
 
-    if (term.cur_x < term.screen_cols - 8)
+    if (term.cur_x < term.screen_cols - 4)
     {
       term.cur_x++;
     }
@@ -545,14 +544,37 @@ void NcTTyUi::_MoveCursorRight()
 
 void NcTTyUi::_MoveCursorLeft()
 {
-  if (prompt_cursor_index > 0)
+  if (prompt_cursor_index == 0)
   {
-    prompt_cursor_index--;
+    return;
+  }
 
-    if (term.cur_x > 4)
-    {
-      term.cur_x--;
-    }
+  prompt_cursor_index--;
+
+  if (term.cur_x > 4 && prompt_cursor_index < term.screen_cols - 8)
+  {
+    term.cur_x--;
+  }
+}
+
+void NcTTyUi::_MoveCursorFirst()
+{
+  prompt_cursor_index = 0;
+  term.cur_x = 4;
+}
+
+void NcTTyUi::_MoveCursorLast()
+{
+  prompt_cursor_index = prompt_length;
+
+  if (prompt_length > term.screen_cols - 8)
+  {
+    term.cur_x = term.screen_cols - 4;
+  }
+
+  else
+  {
+    term.cur_x = 4 + prompt_length;
   }
 }
 
@@ -715,6 +737,16 @@ void NcTTyUi::_GetCharacter()
     else if (c == 'q')
     {
       _QuitApp();
+    }
+
+    else if (c == '0')
+    {
+      _MoveCursorFirst();
+    }
+
+    else if (c == '$')
+    {
+      _MoveCursorLast();
     }
   }
 }
@@ -1008,15 +1040,12 @@ void NcTTyUi::_DisplayMessages()
 void NcTTyUi::_DisplayConnecting()
 {
   unsigned int num_of_lines = 0;
-  unsigned int temp = 1;
 
-  temp *= _AppendSB(" Connecting user '", 18);
-  temp *= _AppendSB(username, strlen(username));
-  temp *= _AppendSB("' with password '", 17);
-  temp *= _AppendSB(password, strlen(password));
-  temp *= _AppendSB("'...", 4);
-
-  num_of_lines += temp;
+  _AppendSB(" Connecting user '", 18);
+  _AppendSB(username, strlen(username));
+  _AppendSB("' with password '", 17);
+  _AppendSB(password, strlen(password));
+  _AppendSB("'...", 4);
 
   for (unsigned int i = num_of_lines; i < term.screen_rows - 1; i++)
   {

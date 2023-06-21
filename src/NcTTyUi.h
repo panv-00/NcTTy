@@ -106,6 +106,8 @@ private:
   void _ScrollDown();
   void _MoveCursorRight();
   void _MoveCursorLeft();
+  void _MoveCursorFirst();
+  void _MoveCursorLast();
   void _InsertChar(char c);
   char _Getch();
   void _GetCharacter();
