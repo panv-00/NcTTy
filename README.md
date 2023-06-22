@@ -31,3 +31,4 @@ hjkl: -> vim-like cursor movement.
 $: -> End of line.
 a: -> append at location.
 A: -> append at end of line.
+i: -> takes you back to insert mode :)
