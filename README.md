@@ -26,7 +26,7 @@ Arrow Up: -> Go up in history
 Arrow Down: -> Display most recent message.
 
 In Cursor mode:
-ijkl: -> vim-like cursor movement.
+hjkl: -> vim-like cursor movement.
 0: -> Beginning of input line.
 $: -> End of line.
 a: -> append at location.
