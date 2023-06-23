@@ -1063,11 +1063,7 @@ void NcTTyUi::_DisplayConnecting()
 {
   unsigned int num_of_lines = 0;
 
-  _AppendSB(" Connecting user '", 18);
-  _AppendSB(username, strlen(username));
-  _AppendSB("' with password '", 17);
-  _AppendSB(password, strlen(password));
-  _AppendSB("'...", 4);
+  num_of_lines += _PrAppendSB(" Connecting...", 14);
 
   for (unsigned int i = num_of_lines; i < term.screen_rows - 1; i++)
   {
