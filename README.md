@@ -12,9 +12,16 @@ $ ./nctty
 On startup, nctty will prompt you for a username, then a password. If your username have no password associated, you can leave the password field empty.
 
 By default, messages are formatted in a special way.
-All messages are displayed in default color, system messages in red, own messages in blue, sent private messages in magenta, received private messages in magenta background and black foreground, finally, emote messages are in green background and black foreground.
 
-This app will not break words at the end of long lines.
+- All messages are displayed in default color.
+- System messages are displayed in red color.
+- Own messages are displayed in blue color.
+- Sent private messages are displayed in magenta color.
+- Received private messages are displayed in magenta background and black foreground.
+- Finally, emote messages are displayed in green background and black foreground.
+
+This app will not break words at the end lines longer than your terminal.
+On resize, nctty will recalculate the dimensions of the terminal, and update the display automatically.
 
 ## Keyboard
 
