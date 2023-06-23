@@ -16,19 +16,31 @@ All messages are displayed in default color, system messages in red, own message
 
 This app will not break words at the end of long lines.
 
-You can also use vim-like mode for cursor movement.
+## Keyboard
 
-In normal mode:
-Ctrl-C: -> Cursor mode.
-Enter: -> sends message.
-Arrows Right/Left: -> move cursor right and left.
-Arrow Up: -> Go up in history
-Arrow Down: -> Display most recent message.
+You can use vim-like mode for cursor movement.
 
-In Cursor mode:
-hjkl: -> vim-like cursor movement.
-0: -> Beginning of input line.
-$: -> End of line.
-a: -> append at location.
-A: -> append at end of line.
-i: -> takes you back to insert mode :)
+### Input Mode
+
+| Key              | Action                         |
+| ---------------- | ------------------------------ |
+| <kbd>C-c</kbd>   | Switch to Cursor Mode.         |
+| <kbd>ENTER</kbd> | Send prompt text.              |
+| <kbd>RIGHT</kbd> | Move Cursor Right.             |
+| <kbd>LEFT</kbd>  | Move Cursor Left.              |
+| <kbd>UP</kbd>    | Scroll Messages Up.            |
+| <kbd>DOWN</kbd>  | Scroll to most recent Message. |
+
+### Cursor Mode
+
+| Key          | Action                              |
+| ------------ | ----------------------------------- |
+| <kbd>i</kbd> | Switch to Insert Mode.              |
+| <kbd>l</kbd> | Move Cursor Right.                  |
+| <kbd>h</kbd> | Move Cursor Left.                   |
+| <kbd>j</kbd> | Scroll Messages Up.                 |
+| <kbd>k</kbd> | Scroll to most recent Message.      |
+| <kbd>0</kbd> | Move Cursor to beginning of Prompt. |
+| <kbd>$</kbd> | Move Cursor to end of Prompt.       |
+| <kbd>a</kbd> | Append at location.                 |
+| <kbd>A</kbd> | Append at the end of the Prompt.    |
