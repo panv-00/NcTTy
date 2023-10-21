@@ -527,7 +527,15 @@ void NcTTyUi::_ScrollUp()
   }
 }
 
-void NcTTyUi::_ScrollDown() { scroll_amount = 0; }
+void NcTTyUi::_ScrollDown()
+{
+  if (scroll_amount < 0)
+  {
+    scroll_amount++;
+  }
+}
+
+void NcTTyUi::_ScrollLast() { scroll_amount = 0; }
 
 void NcTTyUi::_MoveCursorRight()
 {
@@ -734,6 +742,11 @@ void NcTTyUi::_GetCharacter()
     else if (c == 'j')
     {
       _ScrollDown();
+    }
+
+    else if (c == 'G')
+    {
+      _ScrollLast();
     }
 
     else if (c == 'l')

@@ -104,6 +104,7 @@ private:
   void _DeleteChar();
   void _ScrollUp();
   void _ScrollDown();
+  void _ScrollLast();
   void _MoveCursorRight();
   void _MoveCursorLeft();
   void _MoveCursorFirst();
