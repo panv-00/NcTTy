@@ -51,7 +51,7 @@ You can use vim-like mode for cursor movement.
 | `l` | Move Cursor Right.                  |
 | `h` | Move Cursor Left.                   |
 | `j` | Scroll Messages Up.                 |
-| `k` | Scroll to most recent Message.      |
+| `k` | Scroll Messages Down.               |
 | `0` | Move Cursor to beginning of Prompt. |
 | `$` | Move Cursor to end of Prompt.       |
 | `a` | Append at location.                 |
