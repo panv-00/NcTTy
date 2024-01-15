@@ -1130,10 +1130,13 @@ void NcTTyUi::_DisplayDisconnecting()
 
 void NcTTyUi::_PrintPrompt()
 {
+  //_AppendSB(CLR_GREEN_BG, 5);
+  _AppendSB(CLR_CYAN_FG, 5);
   in_insert_mode ? _AppendSB("I", 1) : _AppendSB("C", 1);
   _AppendSB(">> ", 3);
   _PromptToSB();
   _AppendSB(CLEAR_TO_END, 3);
+  _AppendSB(CLR_DEFAULT, 4);
 }
 
 void NcTTyUi::_RefreshScreen()
@@ -1172,7 +1175,6 @@ void NcTTyUi::_RefreshScreen()
   }
 
   _PrintPrompt();
-
   // reposition the cursor
   char buf[32];
   snprintf(buf, sizeof(buf), "\x1b[%d;%dH", term.cur_y + 1, term.cur_x + 1);
